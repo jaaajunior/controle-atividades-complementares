@@ -32,9 +32,6 @@ export function validateLancamento(data, category) {
   if (!required(data.descricao)) {
     errors.descricao = 'Descrição obrigatória.';
   }
-  if (!required(data.data)) {
-    errors.data = 'Informe a data do certificado.';
-  }
 
   if (category) {
     if (category.type === 'per_event') {

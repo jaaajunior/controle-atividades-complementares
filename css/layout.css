@@ -96,6 +96,12 @@
   color: rgba(255,255,255,0.5);
 }
 
+.sidebar__footer-dev {
+  display: inline-block;
+  margin-top: var(--space-2);
+  color: rgba(255,255,255,0.35);
+}
+
 /* ===== MAIN ===== */
 .main {
   display: flex;

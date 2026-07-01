@@ -155,6 +155,13 @@
   letter-spacing: 0.03em;
 }
 
+.field__optional-tag {
+  text-transform: none;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  letter-spacing: normal;
+}
+
 .field input,
 .field select,
 .field textarea {

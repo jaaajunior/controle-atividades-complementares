@@ -61,7 +61,8 @@
 
     <div class="sidebar__footer">
       Cálculo conforme barema institucional vigente.<br/>
-      Dados mantidos apenas durante a sessão.
+      Dados mantidos apenas durante a sessão.<br/>
+      <span class="sidebar__footer-dev">Desenvolvido por Prof. José Augusto Júnior</span>
     </div>
   </aside>
 
@@ -184,7 +185,12 @@
                 </div>
                 <div class="field">
                   <label for="aluno-curso">Curso</label>
-                  <input type="text" id="aluno-curso" placeholder="Ex: Engenharia de Software" />
+                  <select id="aluno-curso"></select>
+                  <span class="field__error"></span>
+                </div>
+                <div class="field field--full hidden" id="aluno-curso-outro-wrap">
+                  <label for="aluno-curso-outro">Especifique o curso</label>
+                  <input type="text" id="aluno-curso-outro" placeholder="Digite o nome do curso" />
                   <span class="field__error"></span>
                 </div>
                 <div class="field">
@@ -193,12 +199,12 @@
                   <span class="field__error"></span>
                 </div>
                 <div class="field">
-                  <label for="aluno-semestre">Semestre</label>
+                  <label for="aluno-semestre">Semestre <span class="field__optional-tag">(opcional)</span></label>
                   <input type="text" id="aluno-semestre" placeholder="Ex: 6" />
                   <span class="field__error"></span>
                 </div>
                 <div class="field">
-                  <label for="aluno-telefone">Telefone</label>
+                  <label for="aluno-telefone">Telefone <span class="field__optional-tag">(opcional)</span></label>
                   <input type="tel" id="aluno-telefone" placeholder="Ex: (75) 99999-0000" />
                   <span class="field__error"></span>
                 </div>
@@ -238,7 +244,7 @@
                   <span class="field__error"></span>
                 </div>
                 <div class="field">
-                  <label for="lanc-data">Data do certificado</label>
+                  <label for="lanc-data">Data do certificado <span class="field__optional-tag">(opcional)</span></label>
                   <input type="date" id="lanc-data" />
                   <span class="field__error"></span>
                 </div>
@@ -248,7 +254,7 @@
 
               <div class="form-grid form-grid--spaced">
                 <div class="field field--full">
-                  <label for="lanc-descricao">Descrição</label>
+                  <label for="lanc-descricao">Descrição ou Nº do Certificado</label>
                   <input type="text" id="lanc-descricao" placeholder="Ex: Curso de Extensão em Inteligência Artificial" />
                   <span class="field__error"></span>
                 </div>

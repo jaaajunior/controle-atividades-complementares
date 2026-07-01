@@ -3,39 +3,90 @@ import { getAluno, setAluno, subscribe } from '../core/state.js';
 import { validateAluno } from '../utils/validators.js';
 import { showToast } from '../ui/toast.js';
 import { initials } from '../utils/formatters.js';
+import { CURSOS, CURSO_OUTRO_VALUE } from '../data/cursos.js';
 
 export function initAlunoModule() {
   const form = document.getElementById('form-aluno');
   if (!form) return;
 
-  const fields = {
-    nome: form.querySelector('#aluno-nome'),
-    curso: form.querySelector('#aluno-curso'),
-    ra: form.querySelector('#aluno-ra'),
-    semestre: form.querySelector('#aluno-semestre'),
-    telefone: form.querySelector('#aluno-telefone'),
-  };
+  const nomeInput = form.querySelector('#aluno-nome');
+  const cursoSelect = form.querySelector('#aluno-curso');
+  const cursoOutroWrap = form.querySelector('#aluno-curso-outro-wrap');
+  const cursoOutroInput = form.querySelector('#aluno-curso-outro');
+  const raInput = form.querySelector('#aluno-ra');
+  const semestreInput = form.querySelector('#aluno-semestre');
+  const telefoneInput = form.querySelector('#aluno-telefone');
+
+  // popula o select de cursos
+  cursoSelect.innerHTML =
+    '<option value="">Selecione o curso...</option>' +
+    CURSOS.map((c) => `<option value="${c}">${c}</option>`).join('') +
+    `<option value="${CURSO_OUTRO_VALUE}">Outro (não está na lista)</option>`;
+
+  cursoSelect.addEventListener('change', () => {
+    toggleCursoOutro(cursoSelect.value === CURSO_OUTRO_VALUE);
+    if (cursoSelect.value === CURSO_OUTRO_VALUE) cursoOutroInput.focus();
+  });
+
+  function toggleCursoOutro(show) {
+    cursoOutroWrap.classList.toggle('hidden', !show);
+    if (!show) cursoOutroInput.value = '';
+  }
 
   // popula com estado atual (caso já preenchido)
   const aluno = getAluno();
-  Object.keys(fields).forEach((key) => {
-    if (fields[key]) fields[key].value = aluno[key] || '';
-  });
+  nomeInput.value = aluno.nome || '';
+  raInput.value = aluno.ra || '';
+  semestreInput.value = aluno.semestre || '';
+  telefoneInput.value = aluno.telefone || '';
+
+  if (aluno.curso) {
+    const isListado = CURSOS.includes(aluno.curso);
+    if (isListado) {
+      cursoSelect.value = aluno.curso;
+      toggleCursoOutro(false);
+    } else {
+      cursoSelect.value = CURSO_OUTRO_VALUE;
+      toggleCursoOutro(true);
+      cursoOutroInput.value = aluno.curso;
+    }
+  }
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    clearErrors(form);
+
+    // resolve o valor final do curso (selecionado ou digitado em "Outro")
+    let cursoFinal = '';
+    let cursoErrorTarget = cursoSelect;
+    let cursoErrorMsg = null;
+
+    if (!cursoSelect.value) {
+      cursoErrorMsg = 'Selecione um curso.';
+    } else if (cursoSelect.value === CURSO_OUTRO_VALUE) {
+      cursoFinal = cursoOutroInput.value.trim();
+      cursoErrorTarget = cursoOutroInput;
+      if (!cursoFinal) cursoErrorMsg = 'Informe o nome do curso.';
+    } else {
+      cursoFinal = cursoSelect.value;
+    }
+
     const data = {
-      nome: fields.nome.value.trim(),
-      curso: fields.curso.value.trim(),
-      ra: fields.ra.value.trim(),
-      semestre: fields.semestre.value.trim(),
-      telefone: fields.telefone.value.trim(),
+      nome: nomeInput.value.trim(),
+      curso: cursoFinal,
+      ra: raInput.value.trim(),
+      semestre: semestreInput.value.trim(),
+      telefone: telefoneInput.value.trim(),
     };
 
     const { valid, errors } = validateAluno(data);
-    clearErrors(form);
-    if (!valid) {
-      applyErrors(form, errors);
+
+    if (cursoErrorMsg) {
+      applyFieldError(cursoErrorTarget, cursoErrorMsg);
+    }
+    applyErrors(form, errors, ['curso']); // curso é tratado separadamente acima
+
+    if (!valid || cursoErrorMsg) {
       showToast('Verifique os campos obrigatórios.', 'warning');
       return;
     }
@@ -53,15 +104,19 @@ function clearErrors(form) {
   form.querySelectorAll('.field').forEach((f) => f.classList.remove('has-error'));
 }
 
-function applyErrors(form, errors) {
+function applyFieldError(input, message) {
+  const field = input.closest('.field');
+  if (!field) return;
+  field.classList.add('has-error');
+  const errorEl = field.querySelector('.field__error');
+  if (errorEl) errorEl.textContent = message;
+}
+
+function applyErrors(form, errors, skipKeys = []) {
   Object.keys(errors).forEach((key) => {
+    if (skipKeys.includes(key)) return;
     const input = form.querySelector(`#aluno-${key}`);
-    if (input) {
-      const field = input.closest('.field');
-      field.classList.add('has-error');
-      const errorEl = field.querySelector('.field__error');
-      if (errorEl) errorEl.textContent = errors[key];
-    }
+    if (input) applyFieldError(input, errors[key]);
   });
 }
 
