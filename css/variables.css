@@ -1,0 +1,64 @@
+:root {
+  /* Paleta UNIFAN - azuis institucionais + branco */
+  --color-primary-900: #0a2647;
+  --color-primary-800: #0f3460;
+  --color-primary-700: #14467e;
+  --color-primary-600: #1a5fa8;
+  --color-primary-500: #2477c9;
+  --color-primary-400: #4a9bdb;
+  --color-primary-100: #e8f2fc;
+  --color-primary-50:  #f4f9fe;
+
+  --color-accent: #f5a623;       /* destaque para alertas/excedentes */
+  --color-success: #1e9e6b;
+  --color-success-bg: #e7f7f0;
+  --color-warning: #f5a623;
+  --color-warning-bg: #fef3e0;
+  --color-danger: #d64550;
+  --color-danger-bg: #fdeceb;
+
+  --color-bg: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+  --color-text: #1c2b3a;
+  --color-text-secondary: #5a6b7d;
+  --color-text-muted: #8b9bab;
+
+  /* Tipografia */
+  --font-display: 'Sora', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-base: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 1.875rem;
+  --fs-3xl: 2.25rem;
+
+  /* Espaçamento */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Layout */
+  --sidebar-width: 264px;
+  --header-height: 68px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-sm: 0 1px 2px rgba(10, 38, 71, 0.06);
+  --shadow-md: 0 4px 12px rgba(10, 38, 71, 0.08);
+  --shadow-lg: 0 12px 32px rgba(10, 38, 71, 0.12);
+
+  --transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}

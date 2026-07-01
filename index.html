@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Controle de Atividades Complementares · UNIFAN</title>
+<meta name="description" content="Sistema de lançamento e cálculo de Atividades Complementares conforme barema institucional da UNIFAN." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="icon" type="image/png" href="assets/img/favicon.png" />
+<link rel="stylesheet" href="css/variables.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <div class="sidebar__brand-mark">
+        <img src="assets/img/logo-unifan-icon.png" alt="Brasão institucional da UNIFAN" />
+      </div>
+      <div class="sidebar__brand-text">
+        <h1>Atividades Complementares</h1>
+        <span>UNIFAN · Coordenação Acadêmica</span>
+      </div>
+    </div>
+
+    <nav class="sidebar__nav">
+      <button class="nav-item is-active" data-view="dashboard">
+        <span class="nav-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></span>
+        Dashboard
+      </button>
+      <button class="nav-item" data-view="aluno">
+        <span class="nav-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg></span>
+        Dados do Aluno
+      </button>
+      <button class="nav-item" data-view="lancamento">
+        <span class="nav-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+        Lançar Atividade
+      </button>
+      <button class="nav-item" data-view="historico">
+        <span class="nav-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>
+        Histórico
+      </button>
+      <button class="nav-item" data-view="resumo">
+        <span class="nav-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 17V9M15 17v-4M21 17H3M21 7H3"/></svg></span>
+        Resumo
+      </button>
+      <button class="nav-item" data-view="relatorios">
+        <span class="nav-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span>
+        Relatórios
+      </button>
+    </nav>
+
+    <div class="sidebar__footer">
+      Cálculo conforme barema institucional vigente.<br/>
+      Dados mantidos apenas durante a sessão.
+    </div>
+  </aside>
+
+  <div class="sidebar-backdrop"></div>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <button class="topbar__menu-toggle" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+        <div class="topbar__title">
+          <h2 id="topbar-view-title">Dashboard</h2>
+          <p id="topbar-view-subtitle">Visão geral das atividades complementares</p>
+        </div>
+      </div>
+      <div class="topbar__student">
+        <span>Aluno: <strong id="topbar-aluno-nome">Aluno não identificado</strong><span id="topbar-aluno-curso"></span></span>
+      </div>
+    </header>
+
+    <div class="view-container">
+
+      <!-- ===================== VIEW: DASHBOARD ===================== -->
+      <section class="view is-active" id="view-dashboard">
+        <div class="view-header">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Panorama geral das horas lançadas, aproveitadas e excedentes.</p>
+          </div>
+        </div>
+
+        <div class="stats-grid section">
+          <div class="stat-card stat-card--primary">
+            <div class="stat-card__top">
+              <span class="stat-card__label">Aproveitadas</span>
+              <span class="stat-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+              </span>
+            </div>
+            <div class="stat-card__value" id="stat-aproveitadas">0h</div>
+            <div class="stat-card__sub">Total de horas válidas no barema</div>
+          </div>
+
+          <div class="stat-card stat-card--warning">
+            <div class="stat-card__top">
+              <span class="stat-card__label">Excedentes</span>
+              <span class="stat-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+              </span>
+            </div>
+            <div class="stat-card__value" id="stat-excedentes">0h</div>
+            <div class="stat-card__sub">Acima do limite anual por categoria</div>
+          </div>
+
+          <div class="stat-card stat-card--info">
+            <div class="stat-card__top">
+              <span class="stat-card__label">Total informado</span>
+              <span class="stat-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+              </span>
+            </div>
+            <div class="stat-card__value" id="stat-informado">0h</div>
+            <div class="stat-card__sub">Soma bruta de todos os certificados</div>
+          </div>
+
+          <div class="stat-card stat-card--success">
+            <div class="stat-card__top">
+              <span class="stat-card__label">Certificados</span>
+              <span class="stat-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              </span>
+            </div>
+            <div class="stat-card__value" id="stat-certificados">0</div>
+            <div class="stat-card__sub">Total de lançamentos cadastrados</div>
+          </div>
+        </div>
+
+        <div class="charts-grid section">
+          <div class="chart-card">
+            <h3>Horas aproveitadas por categoria</h3>
+            <div class="chart-card__canvas-wrap"><canvas id="chart-categoria"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3>Aproveitadas × Excedentes por ano</h3>
+            <div class="chart-card__canvas-wrap"><canvas id="chart-ano"></canvas></div>
+          </div>
+        </div>
+
+        <div class="charts-grid section">
+          <div class="card">
+            <div class="card__head"><h3>Progresso dos limites anuais</h3></div>
+            <div class="card__body" id="dashboard-progress-anual"></div>
+          </div>
+          <div class="card">
+            <div class="card__head"><h3>Resumo por categoria</h3></div>
+            <div class="card__body" id="dashboard-categoria-summary"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== VIEW: ALUNO ===================== -->
+      <section class="view" id="view-aluno">
+        <div class="view-header">
+          <div>
+            <h1>Dados do Aluno</h1>
+            <p>Essas informações aparecem nos relatórios exportados em PDF e Excel.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__body">
+            <form id="form-aluno">
+              <div class="form-grid">
+                <div class="field field--full">
+                  <label for="aluno-nome">Nome completo</label>
+                  <input type="text" id="aluno-nome" placeholder="Ex: Maria da Silva Santos" />
+                  <span class="field__error"></span>
+                </div>
+                <div class="field">
+                  <label for="aluno-curso">Curso</label>
+                  <input type="text" id="aluno-curso" placeholder="Ex: Engenharia de Software" />
+                  <span class="field__error"></span>
+                </div>
+                <div class="field">
+                  <label for="aluno-ra">RA</label>
+                  <input type="text" id="aluno-ra" placeholder="Ex: 2023011234" />
+                  <span class="field__error"></span>
+                </div>
+                <div class="field">
+                  <label for="aluno-semestre">Semestre</label>
+                  <input type="text" id="aluno-semestre" placeholder="Ex: 6" />
+                  <span class="field__error"></span>
+                </div>
+                <div class="field">
+                  <label for="aluno-telefone">Telefone</label>
+                  <input type="tel" id="aluno-telefone" placeholder="Ex: (75) 99999-0000" />
+                  <span class="field__error"></span>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                  Salvar dados do aluno
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== VIEW: LANÇAMENTO ===================== -->
+      <section class="view" id="view-lancamento">
+        <div class="view-header">
+          <div>
+            <h1 id="lancamento-form-title">Novo lançamento de atividade</h1>
+            <p>Selecione a categoria do barema — os campos se ajustam automaticamente à regra de cálculo.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__body">
+            <form id="form-lancamento">
+              <div class="form-grid form-grid--3">
+                <div class="field">
+                  <label for="lanc-categoria">Categoria (barema)</label>
+                  <select id="lanc-categoria"></select>
+                  <span class="field__error"></span>
+                </div>
+                <div class="field">
+                  <label for="lanc-ano">Ano</label>
+                  <input type="number" id="lanc-ano" min="2000" max="2100" step="1" />
+                  <span class="field__error"></span>
+                </div>
+                <div class="field">
+                  <label for="lanc-data">Data do certificado</label>
+                  <input type="date" id="lanc-data" />
+                  <span class="field__error"></span>
+                </div>
+              </div>
+
+              <p id="lanc-categoria-hint" class="lanc-hint"></p>
+
+              <div class="form-grid form-grid--spaced">
+                <div class="field field--full">
+                  <label for="lanc-descricao">Descrição</label>
+                  <input type="text" id="lanc-descricao" placeholder="Ex: Curso de Extensão em Inteligência Artificial" />
+                  <span class="field__error"></span>
+                </div>
+
+                <div id="lanc-campo-dinamico"></div>
+
+                <div class="field field--full">
+                  <label for="lanc-observacoes">Observações</label>
+                  <textarea id="lanc-observacoes" placeholder="Informações adicionais (opcional)"></textarea>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" id="lanc-cancel-edit" class="btn btn-ghost hidden">Cancelar edição</button>
+                <button type="submit" id="lanc-submit-btn" class="btn btn-primary">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  Lançar atividade
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== VIEW: HISTÓRICO ===================== -->
+      <section class="view" id="view-historico">
+        <div class="view-header">
+          <div>
+            <h1>Histórico de Lançamentos</h1>
+            <p>Pesquise, filtre, edite ou exclua atividades já lançadas.</p>
+          </div>
+        </div>
+
+        <div class="filters-bar">
+          <div class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="filtro-termo" placeholder="Pesquisar por descrição ou observações..." />
+          </div>
+          <select id="filtro-ano" aria-label="Filtrar por ano"></select>
+          <select id="filtro-categoria" aria-label="Filtrar por categoria"></select>
+        </div>
+
+        <div class="table-wrap" id="historico-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Ano</th>
+                <th>Categoria</th>
+                <th>Descrição</th>
+                <th>Data</th>
+                <th>Qtd.</th>
+                <th>Informadas</th>
+                <th>Aproveitadas</th>
+                <th>Excedentes</th>
+                <th>Observações</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="historico-tbody"></tbody>
+          </table>
+        </div>
+
+        <div class="empty-state hidden" id="historico-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+          <h4>Nenhum lançamento encontrado</h4>
+          <p>Cadastre uma atividade na aba "Lançar Atividade" ou ajuste os filtros.</p>
+        </div>
+      </section>
+
+      <!-- ===================== VIEW: RESUMO ===================== -->
+      <section class="view" id="view-resumo">
+        <div class="view-header">
+          <div>
+            <h1>Resumo Geral</h1>
+            <p>Totais consolidados por ano (2021–2027) e por categoria.</p>
+          </div>
+        </div>
+
+        <div class="student-summary-card">
+          <div class="student-summary-card__avatar" id="student-card-avatar">?</div>
+          <div>
+            <h3 id="summary-card-nome">Aluno não identificado</h3>
+            <p id="summary-card-meta" class="text-muted-sm">Preencha os dados do aluno na aba correspondente.</p>
+          </div>
+        </div>
+
+        <div class="year-tabs" id="resumo-year-tabs"></div>
+
+        <div class="summary-total-banner">
+          <div>
+            <div class="summary-total-banner__label" id="resumo-total-label">Total geral de horas aproveitadas</div>
+            <div class="summary-total-banner__value" id="resumo-total-value">0h</div>
+          </div>
+          <div class="summary-total-banner__label" id="resumo-total-excedente">Excedentes: 0h</div>
+        </div>
+
+        <div class="section">
+          <div class="card">
+            <div class="card__head"><h3>Totais por ano</h3></div>
+            <div class="table-wrap table-wrap--flat">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Ano</th><th>Lançamentos</th><th>Informadas</th><th>Aproveitadas</th><th>Excedentes</th></tr>
+                </thead>
+                <tbody id="resumo-ano-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="card">
+            <div class="card__head"><h3>Totais por categoria</h3></div>
+            <div class="table-wrap table-wrap--flat">
+              <table class="data-table">
+                <thead>
+                  <tr><th>#</th><th>Categoria</th><th>Regra</th><th>Lançamentos</th><th>Aproveitadas</th><th>Excedentes</th></tr>
+                </thead>
+                <tbody id="resumo-categoria-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== VIEW: RELATÓRIOS ===================== -->
+      <section class="view" id="view-relatorios">
+        <div class="view-header">
+          <div>
+            <h1>Relatórios</h1>
+            <p>Exporte os dados do aluno, lançamentos e resumos em PDF ou Excel.</p>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="card">
+            <div class="card__body report-card-body">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary-600)" stroke-width="1.5" class="report-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6M9 9h1"/></svg>
+              <h3>Relatório em PDF</h3>
+              <p class="report-desc">
+                Dados do aluno, tabela completa, resumo por ano e por categoria, total geral e horas excedentes.
+              </p>
+              <button class="btn btn-primary" id="btn-export-pdf">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg>
+                Gerar PDF
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__body report-card-body">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" stroke-width="1.5" class="report-icon"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <h3>Planilha Excel</h3>
+              <p class="report-desc">
+                Pasta de trabalho com abas separadas: dados do aluno, lançamentos, resumo por ano e por categoria.
+              </p>
+              <button class="btn btn-primary" id="btn-export-excel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg>
+                Gerar Excel
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- Bibliotecas via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<!-- Atualiza título/subtítulo do topbar conforme a tela -->
+<script>
+  const VIEW_META = {
+    dashboard: ['Dashboard', 'Visão geral das atividades complementares'],
+    aluno: ['Dados do Aluno', 'Identificação utilizada nos relatórios'],
+    lancamento: ['Lançar Atividade', 'Cadastro de certificados conforme o barema'],
+    historico: ['Histórico', 'Consulta, edição e exclusão de lançamentos'],
+    resumo: ['Resumo Geral', 'Totais por ano e por categoria'],
+    relatorios: ['Relatórios', 'Exportação em PDF e Excel'],
+  };
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.nav-item').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const [title, subtitle] = VIEW_META[btn.dataset.view] || [];
+        document.getElementById('topbar-view-title').textContent = title || '';
+        document.getElementById('topbar-view-subtitle').textContent = subtitle || '';
+      });
+    });
+  });
+</script>
+
+<!-- Aplicação (ES Modules) -->
+<script type="module" src="js/app.js"></script>
+
+</body>
+</html>
