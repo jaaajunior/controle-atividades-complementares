@@ -80,7 +80,7 @@ async function exportPDF() {
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(14);
-  doc.text('UNIFAN — Centro Universitário Anísio Teixeira', textStartX, 24);
+  doc.text('UNIFAN — Centro Universitário Nobre', textStartX, 24);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   doc.text('Relatório de Atividades Complementares', textStartX, 40);
